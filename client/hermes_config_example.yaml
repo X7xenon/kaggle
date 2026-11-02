@@ -1,0 +1,10 @@
+# Hermes CLI Configuration Example for Kaggle Ollama Setup
+# Place in ~/.hermes/config.yaml or AppData/Local/hermes/config.yaml
+
+model:
+  default: "gemma4-heretic:31b"
+  provider: "custom"
+  # Provide your Ngrok endpoint URL (e.g. happy-petticoat-junior.ngrok-free.dev/v1):
+  base_url: "https:happy-petticoat-junior.ngrok-free.dev/v1"
+  context_length: 65536
+  ollama_num_ctx: 65536

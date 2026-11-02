@@ -16,10 +16,29 @@ ds = s + s
 # ------------------------------------------------------------------------------
 # User Configuration: Change your model and Ngrok details here
 # ------------------------------------------------------------------------------
-MODEL_REPO = "0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF"
-MODEL_FILENAME = "Qwen3.8-27B-Heretic-Q4_K_M.gguf"
-MODEL_NICKNAME = "qwen3.8-heretic:27b"
-MMPROJ_FILENAME = "mmproj-Qwen3.8-27B-Q8_0.gguf" # Optional vision projector
+# Examples:
+# 1. Gemma 4 31B Heretic:
+#    MODEL_REPO = "llmfan46/gemma-4-31B-it-uncensored-heretic-GGUF"
+#    MODEL_FILENAME = "gemma-4-31B-it-uncensored-heretic-Q4_K_M.gguf"
+#    MODEL_NICKNAME = "gemma4-heretic:31b"
+#    MMPROJ_FILENAME = "gemma-4-31B-it-mmproj-BF16.gguf"
+#
+# 2. Qwen 3.8 27B Heretic:
+#    MODEL_REPO = "0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF"
+#    MODEL_FILENAME = "Qwen3.8-27B-Heretic-Q4_K_M.gguf"
+#    MODEL_NICKNAME = "qwen3.8-heretic:27b"
+#    MMPROJ_FILENAME = "mmproj-Qwen3.8-27B-Q8_0.gguf"
+#
+# 3. Muse-Glimmer 30B Heretic Abliterated:
+#    MODEL_REPO = "mlasli/Muse-Glimmer-30B-Heretic-Abliterated-Q4_K_M-GGUF"
+#    MODEL_FILENAME = "Muse-Glimmer-30B-Heretic-Abliterated-Q4_K_M.gguf"
+#    MODEL_NICKNAME = "muse-glimmer-heretic:30b"
+#    MMPROJ_FILENAME = "mmproj-Muse-Glimmer-30B-Q4_K_M.gguf"
+
+MODEL_REPO = "mlasli/Muse-Glimmer-30B-Heretic-Abliterated-Q4_K_M-GGUF"
+MODEL_FILENAME = "Muse-Glimmer-30B-Heretic-Abliterated-Q4_K_M.gguf"
+MODEL_NICKNAME = "muse-glimmer-heretic:30b"
+MMPROJ_FILENAME = "mmproj-Muse-Glimmer-30B-Q4_K_M.gguf"
 
 NGROK_AUTHTOKEN = "YOUR_NGROK_AUTHTOKEN_HERE"
 NGROK_DOMAIN = "YOUR_STATIC_DOMAIN_OR_EMPTY"
@@ -31,7 +50,7 @@ NUM_GPU = 99
 # 1. Environment & GPU Topology Verification
 # ------------------------------------------------------------------------------
 print("=" * 70)
-print(">>> [1/7] Inspecting Storage Partitions & GPU VRAM Topology...")
+print(f">>> [1/7] Inspecting GPU VRAM & Storage Partitions for {MODEL_NICKNAME}...")
 print("=" * 70)
 subprocess.run(["df", "-h", "/kaggle/working", "/tmp"])
 subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total,memory.free", "--format=csv"])
@@ -79,7 +98,6 @@ if MMPROJ_FILENAME:
             "-d", MODEL_DIR, "-o", MMPROJ_FILENAME, MMPROJ_URL
         ])
 
-# Purge incomplete aria2 tracking files
 for item in os.listdir(MODEL_DIR):
     if item.endswith(".aria2"):
         os.remove(os.path.join(MODEL_DIR, item))
@@ -89,18 +107,20 @@ for item in os.listdir(MODEL_DIR):
 # ------------------------------------------------------------------------------
 print("\n>>> [4/7] Generating Ollama Modelfile...")
 MODELFILE_PATH = "/tmp/Modelfile.universal"
+
+# Detect prompt template based on model
+if "muse" in MODEL_NICKNAME.lower():
+    template_str = "{{ if .System }}<|start|>system<|message|>\\n{{ .System }}<|eot|>\\n{{ end }}{{ if .Prompt }}<|start|>user<|message|>\\n{{ .Prompt }}<|eot|>\\n{{ end }}<|start|>assistant<|message|>\\n{{ .Response }}<|eot|>"
+else:
+    template_str = "{{ if .System }}<|im_start|>system\\n{{ .System }}<|im_end|>\\n{{ end }}{{ if .Prompt }}<|im_start|>user\\n{{ .Prompt }}<|im_end|>\\n{{ end }}<|im_start|>assistant\\n{{ .Response }}<|im_end|>"
+
 modelfile_content = f"""FROM {MODEL_PATH}
 PARAMETER temperature 0.7
 PARAMETER top_p 0.95
 PARAMETER top_k 64
 PARAMETER num_ctx {NUM_CTX}
 PARAMETER num_gpu {NUM_GPU}
-TEMPLATE \"\"\"{{{{ if .System }}}}<|im_start|>system
-{{{{ .System }}}}<|im_end|>
-{{{{ end }}}}{{{{ if .Prompt }}}}<|im_start|>user
-{{{{ .Prompt }}}}<|im_end|>
-{{{{ end }}}}<|im_start|>assistant
-{{{{ .Response }}}}<|im_end|>\"\"\"
+TEMPLATE \"\"\"{template_str}\"\"\"
 """
 
 with open(MODELFILE_PATH, "w") as f:

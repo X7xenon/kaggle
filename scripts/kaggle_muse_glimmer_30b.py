@@ -1,7 +1,7 @@
 # ==============================================================================
-# Muse-Glimmer-30B - Kaggle Dual Tesla T4 Setup
-# Base Model: meta-models/Muse-Glimmer-30B
-# Quantized GGUF: meta-models/Muse-Glimmer-30B-GGUF
+# Muse-Glimmer-30B Heretic Abliterated - Kaggle Dual Tesla T4 Setup
+# Base Model: mlasli/Muse-Glimmer-30B-Heretic-Abliterated-BF16
+# Quantized GGUF: mlasli/Muse-Glimmer-30B-Heretic-Abliterated-Q4_K_M-GGUF
 # Context: 65,536 - 131,072 tokens | VRAM: Dual Tesla T4 (30 GB)
 # ==============================================================================
 
@@ -43,16 +43,16 @@ if not os.path.exists("/usr/local/bin/ollama"):
 # ------------------------------------------------------------------------------
 MODEL_DIR = "/tmp/models"
 os.makedirs(MODEL_DIR, exist_ok=True)
-MODEL_FILENAME = "Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf"
+MODEL_FILENAME = "Muse-Glimmer-30B-Heretic-Abliterated-Q4_K_M.gguf"
 MMPROJ_FILENAME = "mmproj-Muse-Glimmer-30B-Q4_K_M.gguf"
 MODEL_PATH = os.path.join(MODEL_DIR, MODEL_FILENAME)
 MMPROJ_PATH = os.path.join(MODEL_DIR, MMPROJ_FILENAME)
 
-MODEL_URL = f"https:{ds}huggingface.co{s}meta-models{s}Muse-Glimmer-30B-GGUF{s}resolve{s}main{s}{MODEL_FILENAME}"
-MMPROJ_URL = f"https:{ds}huggingface.co{s}meta-models{s}Muse-Glimmer-30B-GGUF{s}resolve{s}main{s}{MMPROJ_FILENAME}"
+MODEL_URL = f"https:{ds}huggingface.co{s}mlasli{s}Muse-Glimmer-30B-Heretic-Abliterated-Q4_K_M-GGUF{s}resolve{s}main{s}{MODEL_FILENAME}"
+MMPROJ_URL = f"https:{ds}huggingface.co{s}mlasli{s}Muse-Glimmer-30B-Heretic-Abliterated-Q4_K_M-GGUF{s}resolve{s}main{s}{MMPROJ_FILENAME}"
 
 if not os.path.exists(MODEL_PATH) or os.path.getsize(MODEL_PATH) < 16000000000:
-    print(f"\n>>> [3/7] Downloading {MODEL_FILENAME} (16.75 GB) via aria2c...")
+    print(f"\n>>> [3/7] Downloading {MODEL_FILENAME} (16.9 GB) via aria2c...")
     subprocess.run([
         "aria2c", "-x", "16", "-s", "16", "-k", "1M", "--file-allocation=none",
         "-d", MODEL_DIR, "-o", MODEL_FILENAME, MODEL_URL
@@ -118,8 +118,8 @@ subprocess.Popen(
 )
 time.sleep(4)
 
-print("Registering 'muse-glimmer:30b' in Ollama...")
-subprocess.run(["/usr/local/bin/ollama", "create", "muse-glimmer:30b", "-f", MODELFILE_PATH], env=ollama_env, check=True)
+print("Registering 'muse-glimmer-heretic:30b' in Ollama...")
+subprocess.run(["/usr/local/bin/ollama", "create", "muse-glimmer-heretic:30b", "-f", MODELFILE_PATH], env=ollama_env, check=True)
 subprocess.run(["/usr/local/bin/ollama", "list"], env=ollama_env)
 
 # ------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ else:
 print("\n" + "=" * 70)
 print(f"PUBLIC NGROK ENDPOINT: {tunnel.public_url}")
 print(f"OPENAI COMPATIBLE BASE URL: {tunnel.public_url}{s}v1")
-print(f"MODEL NAME: muse-glimmer:30b")
+print(f"MODEL NAME: muse-glimmer-heretic:30b")
 print("=" * 70 + "\n")
 
 # ------------------------------------------------------------------------------
@@ -175,5 +175,5 @@ while True:
     hours = int(mins / 60)
     rem_mins = mins % 60
     rem_secs = elapsed_sec % 60
-    print(f"[Heartbeat] Uptime: {hours:02d}h {rem_mins:02d}m {rem_secs:02d}s | Ollama muse-glimmer:30b & Ngrok Active | Status: OK", flush=True)
+    print(f"[Heartbeat] Uptime: {hours:02d}h {rem_mins:02d}m {rem_secs:02d}s | Ollama muse-glimmer-heretic:30b & Ngrok Active | Status: OK", flush=True)
     time.sleep(30)

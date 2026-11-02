@@ -2,9 +2,9 @@
 # Place in ~/.hermes/config.yaml or AppData/Local/hermes/config.yaml
 
 model:
-  default: "gemma4-heretic:31b"
+  default: "muse-glimmer-heretic:30b"
   provider: "custom"
-  # Provide your Ngrok endpoint URL (e.g. happy-petticoat-junior.ngrok-free.dev/v1):
-  base_url: "https:happy-petticoat-junior.ngrok-free.dev/v1"
+  # Replace YOUR-NGROK-DOMAIN with your public ngrok domain (e.g. your-subdomain.ngrok-free.dev):
+  base_url: "https:YOUR-NGROK-DOMAIN/v1"
   context_length: 65536
   ollama_num_ctx: 65536

@@ -1,6 +1,6 @@
 # Run Uncensored 31B LLMs Locally on PC with Free Kaggle Dual T4 GPUs
 
-Run massive uncensored LLMs (Gemma 4 31B, Qwen 3.8 27B, Muse 30B) directly on your local PC or laptop with **0 local GPU VRAM** by offloading compute to free Kaggle Dual Tesla T4 GPUs (30 GB combined VRAM).
+Run massive uncensored LLMs (Gemma 4 31B, Qwen 3.8 27B, Muse Glimmer 30B Heretic) directly on your local PC or laptop with **0 local GPU VRAM** by offloading compute to free Kaggle Dual Tesla T4 GPUs (30 GB combined VRAM).
 
 ---
 
@@ -32,7 +32,7 @@ flowchart LR
 |---|---|---|---|---|
 | **Gemma 4 IT Uncensored Heretic** | 31 Billion | Q4_K_M (17.5 GB) | 65,536 tokens | `llmfan46/gemma-4-31B-it-uncensored-heretic-GGUF` |
 | **Qwen 3.8 Heretic Abliterated** | 27 Billion | Q4_K_M (16.5 GB) | 65,536 tokens | `0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF` |
-| **Muse Glimmer Agentic** | 30 Billion | Q4_K_M (16.75 GB) | 65,536 - 131,072 tokens | `meta-models/Muse-Glimmer-30B-GGUF` |
+| **Muse Glimmer 30B Heretic Abliterated** | 30 Billion | Q4_K_M (16.9 GB) | 65,536 - 131,072 tokens | `mlasli/Muse-Glimmer-30B-Heretic-Abliterated-Q4_K_M-GGUF` |
 
 ---
 
@@ -69,7 +69,7 @@ Click **Run Cell**. Within minutes:
 Add this to your local `~/.hermes/config.yaml`:
 ```yaml
 model:
-  default: "gemma4-heretic:31b"
+  default: "muse-glimmer-heretic:30b"
   provider: "custom"
   base_url: "https:your-domain.ngrok-free.dev/v1"
   context_length: 65536
@@ -79,7 +79,7 @@ model:
 #### Option B: Open-WebUI or LM Studio
 - **API Base URL**: `https:your-domain.ngrok-free.dev/v1`
 - **API Key**: `ollama` (or any string)
-- **Model**: `gemma4-heretic:31b`
+- **Model**: `muse-glimmer-heretic:30b`
 
 #### Option C: Python Script
 Run the included test script:
@@ -100,7 +100,7 @@ kaggle/
 │   ├── kaggle_universal_template.py       # All-in-one multi-model runner
 │   ├── kaggle_gemma4_31b.py               # Dedicated Gemma 4 31B Heretic pipeline
 │   ├── kaggle_qwen3.8_27b.py              # Dedicated Qwen 3.8 27B Heretic pipeline
-│   └── kaggle_muse_glimmer_30b.py         # Dedicated Muse Glimmer 30B pipeline
+│   └── kaggle_muse_glimmer_30b.py         # Dedicated Muse Glimmer 30B Heretic pipeline
 └── client/
     ├── test_connection.py                 # Local PC verification script
     └── hermes_config_example.yaml         # Hermes Agent configuration template

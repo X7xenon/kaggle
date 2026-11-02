@@ -11,9 +11,9 @@ import sys
 s = chr(47)
 ds = s + s
 
-# Paste your public Ngrok URL here (e.g. happy-petticoat-junior.ngrok-free.dev)
-NGROK_DOMAIN = "happy-petticoat-junior.ngrok-free.dev"
-MODEL_NAME = "gemma4-heretic:31b" # Or qwen3.8-heretic:27b, muse-glimmer:30b
+# [FILL IN]: Paste your public Ngrok domain here (e.g. your-subdomain.ngrok-free.dev)
+NGROK_DOMAIN = "YOUR_NGROK_DOMAIN_HERE"
+MODEL_NAME = "muse-glimmer-heretic:30b" # Or gemma4-heretic:31b, qwen3.8-heretic:27b
 
 endpoint = f"https:{ds}{NGROK_DOMAIN}{s}v1{s}chat{s}completions"
 
